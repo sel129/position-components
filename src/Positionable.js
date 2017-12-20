@@ -1,37 +1,38 @@
-import React, { Component } from 'react';
+import React from 'react';
+import ReactDOM from 'react-dom'
 
-class Positionable extends Component {
-  constructor() {
-    super();
-    this.state = {
-      renderedHeight: 0,
-      renderedWidth: 0
-    };
-  }
-  componentDidMount() {
-    this.setState(
-      {
-        renderedHeight: this.renderedElement.clientHeight,
-        renderedWidth: this.renderedElement.clientWidth
-      }
-    );
-  }
-
-  render() {
-    const style = {
-      backgroundColor: 'red',
-      position: 'absolute',
-      top: (this.props.height - this.state.renderedHeight)/2,
-      left: (this.props.width - this.state.renderedWidth)/2,
+function parentSizeProvider(WrappedComponent) {
+  return class extends React.Component {
+    constructor() {
+      super();
+      this.state = {
+        renderedHeight: 0,
+        renderedWidth: 0
+      };
     }
 
-    return (
-      <div style={style}
-        ref={ (renderedElement) => this.renderedElement = renderedElement}>
-        PositionMe
-      </div>
-    );
+    componentDidMount() {
+      // check for composite element
+      // if(React.isValidElement(this.renderedElement)) {
+      //   console.log("composite");
+      // }
+      const domNode = ReactDOM.findDOMNode(this.renderedElement);
+      this.setState(
+        {
+          renderedHeight: domNode.clientHeight,
+          renderedWidth: domNode.clientWidth
+        }
+      );
+    }
+
+    render() {
+      return <WrappedComponent
+        {...this.props}
+        renderedHeight={this.state.renderedHeight || 0}
+        renderedWidth={this.state.renderedWidth || 0}
+        ref={ (renderedElement) => this.renderedElement = renderedElement}/>;
+    }
   }
 }
 
-export default Positionable;
+export default parentSizeProvider;
