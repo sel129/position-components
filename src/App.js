@@ -1,7 +1,24 @@
 import React, { Component } from 'react';
 import './App.css';
+import Positionable from './Positionable'
 
 class App extends Component {
+  constructor() {
+    super();
+    window.addEventListener('resize', function(event){
+      this.setState(
+        {
+          height: event.srcElement.innerHeight,
+          width: event.srcElement.innerWidth
+        }
+      );
+    }.bind(this));
+    this.state = {
+      height: window.innerHeight,
+      width: window.innerWidth
+    }
+  }
+
   position(originalComponent) {
     const style1={
       position: 'absolute',
@@ -16,6 +33,8 @@ class App extends Component {
     return originalComponent(style1);
   }
 
+
+
   render() {
     const child = (position) => {
       return (<div style={position}>component1</div>);
@@ -23,7 +42,7 @@ class App extends Component {
     const div1 = this.position(child)
     return (
       <div>
-        {div1}
+        <Positionable height={this.state.height} width={this.state.width}/>
       </div>
     );
   }
