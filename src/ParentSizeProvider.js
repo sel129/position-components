@@ -18,7 +18,7 @@ function parentSizeProvider(WrappedComponent) {
       }
     }
     render() {
-      return <WrappedComponent {...this.props} height={this.state.height} width={this.state.width} />;
+      return <WrappedComponent {...this.props} parentHeight={this.state.height} parentWidth={this.state.width} />;
     }
   }
 }
